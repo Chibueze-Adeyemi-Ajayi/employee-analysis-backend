@@ -15,10 +15,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.employee.analysis.employeeanalysis.User.UserService;
+
 public class SpringSecurityFilter extends OncePerRequestFilter {
 
     @Autowired 
     SpringSecurityJWT jwt;
+
+    @Autowired
+    UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -28,7 +33,7 @@ public class SpringSecurityFilter extends OncePerRequestFilter {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String jwt = authHeader.substring(7), username = this.jwt.extractUsername(jwt);
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails user = this.authService.loadUserByUsername(username);
+                    UserDetails user = this.userService.loadUserByUsername(username);
                     if (user == null) throw new UsernameNotFoundException("User not found");
                     if (this.jwt.validateToken(jwt)) {
                         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
