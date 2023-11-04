@@ -2,6 +2,7 @@ package com.employee.analysis.employeeanalysis.User;
 
 import java.util.Collection;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,10 +21,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user", schema = "", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {
-        "email"
-    })
+@Table(name = "user", schema = "employee-analysis", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "email" }),
+    @UniqueConstraint(columnNames = { "username" })
 })
 @Getter
 @Setter
@@ -39,7 +39,9 @@ public class User implements UserDetails {
     private boolean isAccountNonLocked = true;
     private boolean isCredentialsNonExpired = true;
     private boolean isEnabled = true;
+    @Column(nullable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
     
     @Override
